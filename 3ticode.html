@@ -1,509 +1,501 @@
-{\rtf1\ansi\ansicpg950\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww12720\viewh7240\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>看影片學雙語（台語，英文）</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 卡片基本樣式與懸停效果 */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px); /* 向上移動一點 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* 增加陰影 */
+        }
+        /* 答對時的醒目效果 (動畫 + 背景色) */
+        .correct-answer {
+            animation: correctPulse 0.6s ease;
+            background-color: #a7f3d0 !important; /* 淺綠色 */
+            border-color: #059669 !important; /* 深綠色 */
+        }
+        /* 答錯時的醒目效果 (動畫 + 背景色) */
+        .incorrect-answer {
+             animation: incorrectShake 0.6s ease;
+             background-color: #fee2e2 !important; /* 淺紅色 */
+             border-color: #ef4444 !important; /* 深紅色 */
+        }
+        /* 顯示正確答案時的高亮樣式 */
+         .highlight-correct {
+            background-color: #a7f3d0 !important; /* 淺綠色 */
+            border: 2px solid #059669 !important; /* 深綠色邊框 */
+         }
 
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="zh-TW">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>\uc0\u30475 \u24433 \u29255 \u23416 \u38617 \u35486 \u65288 \u21488 \u35486 \u65292 \u33521 \u25991 \u65289 </title>\
-    <script src="https://cdn.tailwindcss.com"></script>\
-    <style>\
-        /* \uc0\u21345 \u29255 \u22522 \u26412 \u27171 \u24335 \u33287 \u25080 \u20572 \u25928 \u26524  */\
-        .card \{\
-            transition: transform 0.3s ease, box-shadow 0.3s ease;\
-            cursor: pointer;\
-        \}\
-        .card:hover \{\
-            transform: translateY(-5px); /* \uc0\u21521 \u19978 \u31227 \u21205 \u19968 \u40670  */\
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* \uc0\u22686 \u21152 \u38512 \u24433  */\
-        \}\
-        /* \uc0\u31572 \u23565 \u26178 \u30340 \u37266 \u30446 \u25928 \u26524  (\u21205 \u30059  + \u32972 \u26223 \u33394 ) */\
-        .correct-answer \{\
-            animation: correctPulse 0.6s ease;\
-            background-color: #a7f3d0 !important; /* \uc0\u28154 \u32160 \u33394  */\
-            border-color: #059669 !important; /* \uc0\u28145 \u32160 \u33394  */\
-        \}\
-        /* \uc0\u31572 \u37679 \u26178 \u30340 \u37266 \u30446 \u25928 \u26524  (\u21205 \u30059  + \u32972 \u26223 \u33394 ) */\
-        .incorrect-answer \{\
-             animation: incorrectShake 0.6s ease;\
-             background-color: #fee2e2 !important; /* \uc0\u28154 \u32005 \u33394  */\
-             border-color: #ef4444 !important; /* \uc0\u28145 \u32005 \u33394  */\
-        \}\
-        /* \uc0\u39023 \u31034 \u27491 \u30906 \u31572 \u26696 \u26178 \u30340 \u39640 \u20142 \u27171 \u24335  */\
-         .highlight-correct \{\
-            background-color: #a7f3d0 !important; /* \uc0\u28154 \u32160 \u33394  */\
-            border: 2px solid #059669 !important; /* \uc0\u28145 \u32160 \u33394 \u37002 \u26694  */\
-         \}\
-\
-        /* \uc0\u31572 \u23565 \u26178 \u30340 \u33032 \u34909 \u21205 \u30059  */\
-        @keyframes correctPulse \{\
-            0% \{ transform: scale(1); \}\
-            50% \{ transform: scale(1.05); \}\
-            100% \{ transform: scale(1); \}\
-        \}\
-        /* \uc0\u31572 \u37679 \u26178 \u30340 \u25622 \u26179 \u21205 \u30059  */\
-         @keyframes incorrectShake \{\
-             0%, 100% \{ transform: translateX(0); \}\
-             25% \{ transform: translateX(-5px); \}\
-             75% \{ transform: translateX(5px); \}\
-         \}\
-    </style>\
-</head>\
-<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center p-4 font-sans">\
-    <div id="quiz-container" class="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-3xl">\
-        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">\uc0\u30475 \u24433 \u29255 \u23416 \u38617 \u35486 \u65288 \u21488 \u35486 \u65292 \u33521 \u25991 \u65289 </h1>\
-        <p class="text-base font-bold text-center text-gray-700 mb-1">\uc0\u36938 \u25138 \u21109 \u24314 \u20154 \u65306 Gloria\u21555 \u31168 \u34349 \u32769 \u24107 </p>\
-        <p class="text-sm text-center text-gray-600 mb-1">Google\uc0\u35469 \u35657 \u35611 \u24107 \u65292 \u21488 \u35486 \u35469 \u35657 \u39640 \u32026 \u35657 \u26360 \u33521 \u35486 \u38291 \u21488 \u35486 \u25945 \u24107 </p>\
-        <p class="text-sm text-center text-blue-600 hover:underline mb-4">\
-            \uc0\u21443 \u32771 \u24433 \u29255 \u65306 <a href="https://youtu.be/PrF6aT8mi_c?si=SUJtXRbfiitB2kU1\'94\u27492 \u35338 \u24687 \u20013 \u30340 \u32178 \u22336 \u65292 \u25913 \u28858 \'93\u21443 \u32771 \u24433 \u29255 \u65306 \u35531 \u25353 \u36899 \u32080 \u65288 \u21152 \u19978 \u36229 \u36899 \u32080 \u25928 \u26524 \u65289 " target="_blank" rel="noopener noreferrer">\u35531 \u25353 \u36899 \u32080 </a>\
-        </p>\
-\
-        <div id="quiz-area">\
-            <div id="progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">\
-                <div id="progress" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>\
-            </div>\
-            <p id="round-info" class="text-center font-semibold text-lg text-indigo-700 mb-4"></p>\
-            <p id="score" class="text-center font-semibold text-lg text-green-700 mb-4">\uc0\u20998 \u25976 : 0</p>\
-\
-            <div id="question-card" class="bg-indigo-100 border border-indigo-300 rounded-lg p-4 md:p-6 mb-6 text-center">\
-                <p class="text-gray-600 mb-2 text-sm hidden" id="question-type"></p>\
-                <p id="question" class="text-xl md:text-2xl font-semibold text-indigo-900"></p>\
-            </div>\
-\
-            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">\
-                </div>\
-\
-            <div id="feedback" class="mt-4 text-center font-medium h-6"></div>\
-            <button id="next-button" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 hidden">\uc0\u19979 \u19968 \u38988 </button>\
-        </div>\
-\
-        <div id="results-area" class="hidden text-center">\
-             <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">\uc0\u28204 \u39511 \u32080 \u26524 </h2>\
-             <div id="round1-results" class="mb-4"></div>\
-             <div id="round2-results" class="mb-4"></div>\
-             <div id="round3-results" class="mb-4"></div>\
-             <p id="final-score" class="text-lg font-semibold mt-4"></p>\
-             <button id="restart-button" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">\uc0\u37325 \u26032 \u38283 \u22987 </button>\
-        </div>\
-    </div>\
-\
-    <script>\
-        // \uc0\u36039 \u26009 \u20358 \u28304 \u65306 \u21488 \u35486 \u28450 \u23383 \u12289 \u25340 \u38899 \u12289 \u33521 \u25991 \u32763 \u35695 \
-        const words = [\
-            \{ hanzi: "\uc0\u20445 \u38570 \u26989 \u21209 \u21729 ", pinyin: "P\'f3-hi\'e1m gia\u781 p-b\u363 -u\'e2n", english: "Insurance agent" \},\
-            \{ hanzi: "\uc0\u37291 \u30274 \u24847 \u22806 \u38570 ", pinyin: "I-li\'e2u \'ec-gu\u257 -hi\'e1m", english: "Medical accident insurance" \},\
-            \{ hanzi: "\uc0\u36554 \u31117 ", pinyin: "Chhia-h\u333 ", english: "Car accident" \},\
-            \{ hanzi: "\uc0\u20303 \u38498 ", pinyin: "Ts\u363 -\u299 nn", english: "Hospitalization" \},\
-            \{ hanzi: "\uc0\u35036 \u21161 ", pinyin: "H\'fa-ts\u333 o", english: "Subsidy" \},\
-            \{ hanzi: "\uc0\u26379 \u21451 ", pinyin: "P\'eeng-i\'fa", english: "Friend" \},\
-            \{ hanzi: "\uc0\u35242 \u25114 ", pinyin: "Tshin-tsheh", english: "Relatives" \},\
-            \{ hanzi: "\uc0\u25163 \u25351 \u38957 ", pinyin: "Tshi\'fa-ts\'ed-th\'e2u", english: "Finger" \},\
-            \{ hanzi: "\uc0\u23478 \u24237 ", pinyin: "Ka-t\'eeng", english: "Family" \},\
-            \{ hanzi: "\uc0\u29983 \u27963 ", pinyin: "Sing-ua\u781 h", english: "Life" \}\
-        ];\
-\
-        // \uc0\u36938 \u25138 \u29376 \u24907 \u35722 \u25976 \
-        let currentRound = 1; // \uc0\u30446 \u21069 \u38542 \u27573  (1: \u21488 \u35486 ->\u33521 , 2: \u33521 ->\u21488 \u35486 , 3: \u21488 \u35486 ->\u25340 \u38899 )\
-        let currentQuestionIndex = 0; // \uc0\u30446 \u21069 \u38988 \u34399  (\u24478  0 \u38283 \u22987 )\
-        let score = 0; // \uc0\u20998 \u25976 \
-        let questionsRound1 = []; // \uc0\u31532 \u19968 \u38542 \u27573 \u38988 \u30446  (\u21488 \u35486 ->\u33521 )\
-        let questionsRound2 = []; // \uc0\u31532 \u20108 \u38542 \u27573 \u38988 \u30446  (\u33521 ->\u21488 \u35486 )\
-        let questionsRound3 = []; // \uc0\u31532 \u19977 \u38542 \u27573 \u38988 \u30446  (\u21488 \u35486 ->\u25340 \u38899 )\
-        let round1Answers = []; // \uc0\u20786 \u23384 \u31532 \u19968 \u38542 \u27573 \u30340 \u20316 \u31572 \u35352 \u37636  \{ question, correctAnswer, userAnswer, isCorrect \}\
-        let round2Answers = []; // \uc0\u20786 \u23384 \u31532 \u20108 \u38542 \u27573 \u30340 \u20316 \u31572 \u35352 \u37636 \
-        let round3Answers = []; // \uc0\u20786 \u23384 \u31532 \u19977 \u38542 \u27573 \u30340 \u20316 \u31572 \u35352 \u37636 \
-        let optionsDisabled = false; // \uc0\u25511 \u21046 \u36984 \u38917 \u26159 \u21542 \u21487 \u40670 \u25802  (\u38450 \u27490 \u37325 \u35079 \u40670 \u25802 )\
-\
-        // \uc0\u29554 \u21462  DOM \u20803 \u32032 \
-        const quizArea = document.getElementById('quiz-area');\
-        const resultsArea = document.getElementById('results-area');\
-        const roundInfo = document.getElementById('round-info');\
-        const scoreDisplay = document.getElementById('score');\
-        // const questionTypeDisplay = document.getElementById('question-type'); // \uc0\u38614 \u28982 \u38577 \u34255 \u20102 \u65292 \u20294  JS \u21487 \u33021 \u20173 \u38656 \u24341 \u29992 \
-        const questionDisplay = document.getElementById('question');\
-        const optionsContainer = document.getElementById('options-container');\
-        const feedbackDisplay = document.getElementById('feedback');\
-        const nextButton = document.getElementById('next-button');\
-        const restartButton = document.getElementById('restart-button');\
-        const progressBar = document.getElementById('progress');\
-        const round1ResultsDiv = document.getElementById('round1-results'); // \uc0\u29554 \u21462 \u32080 \u26524 \u39023 \u31034 \u21312 \u22495 \u30340 \u20803 \u32032 \
-        const round2ResultsDiv = document.getElementById('round2-results');\
-        const round3ResultsDiv = document.getElementById('round3-results');\
-        const finalScoreDisplay = document.getElementById('final-score');\
-\
-\
-        // Fisher-Yates (aka Knuth) Shuffle \uc0\u27927 \u29260 \u28436 \u31639 \u27861 \u65306 \u29992 \u26044 \u25171 \u20098 \u38499 \u21015 \u38918 \u24207 \
-        function shuffleArray(array) \{\
-            for (let i = array.length - 1; i > 0; i--) \{\
-                const j = Math.floor(Math.random() * (i + 1)); // \uc0\u38568 \u27231 \u36984 \u19968 \u20491 \u21069 \u38754 \u30340 \u20803 \u32032 \
-                [array[i], array[j]] = [array[j], array[i]]; // \uc0\u20132 \u25563 \u20803 \u32032 \
-            \}\
-            return array;\
-        \}\
-\
-         // \uc0\u29986 \u29983 \u21253 \u21547 \u19968 \u20491 \u27491 \u30906 \u31572 \u26696 \u21644 \u19977 \u20491 \u24178 \u25854 \u38917 \u30340 \u36984 \u38917 \u38499 \u21015 \
-         function generateOptions(correctAnswer, type) \{\
-             let options = [correctAnswer]; // \uc0\u20808 \u25918 \u20837 \u27491 \u30906 \u31572 \u26696 \
-             let distractors = [];\
-\
-             // \uc0\u26681 \u25818 \u39006 \u22411  (english, hanzi, pinyin) \u21462 \u24471 \u25152 \u26377 \u21487 \u33021 \u30340 \u36984 \u38917 \u65292 \u20006 \u25490 \u38500 \u27491 \u30906 \u31572 \u26696 \
-             if (type === 'english') \{\
-                 distractors = words.map(w => w.english).filter(item => item !== correctAnswer);\
-             \} else if (type === 'hanzi') \{\
-                 distractors = words.map(w => w.hanzi).filter(item => item !== correctAnswer);\
-             \} else if (type === 'pinyin') \{\
-                 distractors = words.map(w => w.pinyin).filter(item => item !== correctAnswer);\
-             \}\
-\
-             shuffleArray(distractors); // \uc0\u25171 \u20098 \u24178 \u25854 \u38917 \u38918 \u24207 \
-\
-             // \uc0\u24478 \u25171 \u20098 \u30340 \u24178 \u25854 \u38917 \u20013 \u21462 \u20986 \u65292 \u30452 \u21040 \u36984 \u38917 \u36948 \u21040  4 \u20491 \
-             while (options.length < 4 && distractors.length > 0) \{\
-                 const distractor = distractors.pop();\
-                 if (!options.includes(distractor)) \{ // \uc0\u36991 \u20813 \u37325 \u35079 \u36984 \u38917 \
-                     options.push(distractor);\
-                 \}\
-             \}\
-             // \uc0\u22914 \u26524 \u24178 \u25854 \u38917 \u19981 \u36275 \u65288 \u20363 \u22914 \u32317 \u35422 \u24409 \u37327 \u24456 \u23569 \u65289 \u65292 \u21063 \u38568 \u27231 \u36984 \u21462 \u35422 \u24409 \u35036 \u20805 \u65292 \u30906 \u20445 \u32317 \u26377  4 \u20491 \u36984 \u38917 \
-             while (options.length < 4) \{\
-                 const randomWord = words[Math.floor(Math.random() * words.length)];\
-                 let potentialOption;\
-                 if (type === 'english') \{\
-                     potentialOption = randomWord.english;\
-                 \} else if (type === 'hanzi') \{\
-                     potentialOption = randomWord.hanzi;\
-                 \} else if (type === 'pinyin') \{\
-                     potentialOption = randomWord.pinyin;\
-                 \}\
-\
-                 if (!options.includes(potentialOption)) \{\
-                     options.push(potentialOption);\
-                 \}\
-             \}\
-\
-             return shuffleArray(options); // \uc0\u26368 \u24460 \u20877 \u25171 \u20098 \u19968 \u27425 \u21253 \u21547 \u27491 \u30906 \u31572 \u26696 \u30340 \u36984 \u38917 \u38499 \u21015 \
-         \}\
-\
-        // \uc0\u39023 \u31034 \u30446 \u21069 \u30340 \u21839 \u38988 \u21644 \u36984 \u38917 \
-        function displayQuestion() \{\
-            optionsDisabled = false; // \uc0\u37325 \u35373 \u36984 \u38917 \u28858 \u21487 \u40670 \u25802 \
-            feedbackDisplay.textContent = ''; // \uc0\u28165 \u31354 \u19978 \u19968 \u38988 \u30340 \u22238 \u39243 \
-            feedbackDisplay.className = 'mt-4 text-center font-medium h-6'; // \uc0\u37325 \u35373 \u22238 \u39243 \u27171 \u24335 \
-            optionsContainer.innerHTML = ''; // \uc0\u28165 \u31354 \u19978 \u19968 \u38988 \u30340 \u36984 \u38917 \u25353 \u37397 \
-            nextButton.classList.add('hidden'); // \uc0\u38577 \u34255 \u19979 \u19968 \u38988 \u25353 \u37397 \
-\
-            // \uc0\u26681 \u25818 \u30446 \u21069 \u38542 \u27573 \u36984 \u25799 \u38988 \u30446 \u20358 \u28304 \u21644 \u21839 \u38988 \u39006 \u22411 \
-            let currentQuestions;\
-            let answerType;\
-            let roundTitle;\
-\
-            if (currentRound === 1) \{\
-                currentQuestions = questionsRound1;\
-                answerType = 'english';\
-                roundTitle = '\uc0\u31532 \u19968 \u38542 \u27573 \u65306 \u21488 \u35486 \u28450 \u23383  \u10145 \u65039  \u33521 \u25991 ';\
-            \} else if (currentRound === 2) \{\
-                currentQuestions = questionsRound2;\
-                answerType = 'hanzi';\
-                roundTitle = '\uc0\u31532 \u20108 \u38542 \u27573 \u65306 \u33521 \u25991  \u10145 \u65039  \u21488 \u35486 \u28450 \u23383 ';\
-            \} else if (currentRound === 3) \{\
-                currentQuestions = questionsRound3;\
-                answerType = 'pinyin';\
-                roundTitle = '\uc0\u31532 \u19977 \u38542 \u27573 \u65306 \u21488 \u35486 \u28450 \u23383  \u10145 \u65039  \u21488 \u32645 \u25340 \u38899 ';\
-            \}\
-\
-\
-            // \uc0\u27298 \u26597 \u26159 \u21542 \u23436 \u25104 \u35442 \u38542 \u27573 \u25152 \u26377 \u38988 \u30446 \
-            if (currentQuestionIndex >= currentQuestions.length) \{\
-                if (currentRound < 3) \{\
-                    // \uc0\u22914 \u26524 \u19981 \u26159 \u26368 \u24460 \u19968 \u38542 \u27573 \u65292 \u39023 \u31034 \u35442 \u38542 \u27573 \u32080 \u26524 \u20006 \u28310 \u20633 \u19979 \u19968 \u38542 \u27573 \
-                    if (currentRound === 1) \{\
-                        displayRoundResults(1, round1Answers, roundTitle);\
-                    \} else if (currentRound === 2) \{\
-                        displayRoundResults(2, round2Answers, roundTitle);\
-                    \}\
-                \} else \{\
-                    // \uc0\u22914 \u26524 \u26159 \u26368 \u24460 \u19968 \u38542 \u27573 \u65292 \u39023 \u31034 \u26368 \u32066 \u32080 \u26524 \
-                     displayFinalResults();\
-                \}\
-                return; // \uc0\u32080 \u26463 \u20989 \u24335 \u22519 \u34892 \
-            \}\
-\
-            // \uc0\u29554 \u21462 \u30070 \u21069 \u21839 \u38988 \u30340 \u36039 \u26009 \
-            const questionData = currentQuestions[currentQuestionIndex];\
-            // \uc0\u26356 \u26032 \u20171 \u38754 \u39023 \u31034 \u65306 \u38542 \u27573 \u12289 \u38988 \u34399 \u12289 \u21839 \u38988 \u26412 \u36523 \
-            roundInfo.textContent = `$\{roundTitle\} - \uc0\u38988 \u30446  $\{currentQuestionIndex + 1\} / $\{currentQuestions.length\}`;\
-            questionDisplay.textContent = questionData.question;\
-\
-            // \uc0\u29986 \u29983 \u36984 \u38917  (\u21253 \u21547 \u27491 \u30906 \u31572 \u26696 \u21644 \u24178 \u25854 \u38917 )\
-            const options = generateOptions(questionData.correctAnswer, answerType);\
-\
-            // \uc0\u21109 \u24314 \u36984 \u38917 \u25353 \u37397 \u20006 \u28155 \u21152 \u21040 \u23481 \u22120 \u20013 \
-            options.forEach(option => \{\
-                const button = document.createElement('button');\
-                button.textContent = option;\
-                // \uc0\u28155 \u21152  Tailwind CSS \u27171 \u24335 \u21644 \u33258 \u35330  'card' \u27171 \u24335 \
-                button.classList.add('card', 'bg-white', 'border', 'border-gray-300', 'rounded-lg', 'p-4', 'text-center', 'hover:bg-gray-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:ring-opacity-50', 'transition', 'duration-150', 'ease-in-out');\
-                // \uc0\u35373 \u23450 \u25353 \u37397 \u40670 \u25802 \u20107 \u20214 \
-                button.onclick = () => selectAnswer(option, questionData.correctAnswer, button);\
-                optionsContainer.appendChild(button);\
-            \});\
-\
-            // \uc0\u26356 \u26032 \u36914 \u24230 \u26781 \
-            const totalQuestions = questionsRound1.length + questionsRound2.length + questionsRound3.length;\
-            let completedQuestions = 0;\
-            if (currentRound === 1) \{\
-                completedQuestions = currentQuestionIndex;\
-            \} else if (currentRound === 2) \{\
-                completedQuestions = questionsRound1.length + currentQuestionIndex;\
-            \} else if (currentRound === 3) \{\
-                 completedQuestions = questionsRound1.length + questionsRound2.length + currentQuestionIndex;\
-            \}\
-            // \uc0\u35336 \u31639 \u36914 \u24230 \u30334 \u20998 \u27604  (\u39023 \u31034 \u24050 \u23436 \u25104 \u30340 \u38988 \u30446 \u27604 \u20363 )\
-            const progressPercentage = (completedQuestions / totalQuestions) * 100;\
-            progressBar.style.width = `$\{progressPercentage\}%`;\
-        \}\
-\
-        // \uc0\u34389 \u29702 \u29609 \u23478 \u36984 \u25799 \u31572 \u26696 \u30340 \u37007 \u36655 \
-        function selectAnswer(selectedOption, correctAnswer, button) \{\
-             if (optionsDisabled) return; // \uc0\u22914 \u26524 \u36984 \u38917 \u24050 \u34987 \u31105 \u29992  (\u24050 \u20316 \u31572 )\u65292 \u21063 \u19981 \u22519 \u34892 \u20219 \u20309 \u25805 \u20316 \
-             optionsDisabled = true; // \uc0\u31105 \u29992 \u36984 \u38917 \u65292 \u38450 \u27490 \u37325 \u35079 \u40670 \u25802 \
-\
-            const isCorrect = selectedOption === correctAnswer; // \uc0\u21028 \u26039 \u31572 \u26696 \u26159 \u21542 \u27491 \u30906 \
-             // \uc0\u35352 \u37636 \u20316 \u31572 \u36039 \u35338 \
-             const answerRecord = \{\
-                 question: (currentRound === 1 ? questionsRound1 : (currentRound === 2 ? questionsRound2 : questionsRound3))[currentQuestionIndex].question,\
-                 correctAnswer: correctAnswer,\
-                 userAnswer: selectedOption,\
-                 isCorrect: isCorrect\
-             \};\
-\
-             // \uc0\u23559 \u20316 \u31572 \u35352 \u37636 \u23384 \u20786 \u21040 \u23565 \u25033 \u38542 \u27573 \u30340 \u38499 \u21015 \u20013 \
-             if (currentRound === 1) \{\
-                 round1Answers.push(answerRecord);\
-             \} else if (currentRound === 2) \{\
-                 round2Answers.push(answerRecord);\
-             \} else if (currentRound === 3) \{\
-                 round3Answers.push(answerRecord);\
-             \}\
-\
-\
-             // \uc0\u31105 \u29992 \u25152 \u26377 \u36984 \u38917 \u25353 \u37397 \u65292 \u20006 \u25552 \u20379 \u35222 \u35258 \u22238 \u39243 \
-             const buttons = optionsContainer.querySelectorAll('button');\
-             buttons.forEach(btn => \{\
-                 btn.disabled = true; // \uc0\u31105 \u29992 \u25353 \u37397 \
-                  // \uc0\u28961 \u35542 \u23565 \u37679 \u65292 \u37117 \u39640 \u20142 \u39023 \u31034 \u27491 \u30906 \u31572 \u26696 \
-                  if (btn.textContent === correctAnswer) \{\
-                      btn.classList.add('highlight-correct'); // \uc0\u28155 \u21152 \u39640 \u20142 \u27171 \u24335 \
-                  \}\
-                  // \uc0\u26681 \u25818 \u36984 \u25799 \u30340 \u25353 \u37397 \u21644 \u31572 \u26696 \u26159 \u21542 \u27491 \u30906 \u65292 \u25033 \u29992 \u19981 \u21516 \u30340 \u27171 \u24335 \u21644 \u21205 \u30059 \
-                  if (btn === button) \{ // \uc0\u22914 \u26524 \u26159 \u29609 \u23478 \u40670 \u25802 \u30340 \u37027 \u20491 \u25353 \u37397 \
-                      if (isCorrect) \{\
-                          btn.classList.remove('hover:bg-gray-100'); // \uc0\u31227 \u38500 \u25080 \u20572 \u25928 \u26524 \
-                          btn.classList.add('correct-answer'); // \uc0\u28155 \u21152 \u31572 \u23565 \u30340 \u27171 \u24335 \u21644 \u21205 \u30059 \
-                          feedbackDisplay.textContent = '\uc0\u31572 \u23565 \u20102 \u65281  \u55356 \u57225 '; // \u39023 \u31034 \u31572 \u23565 \u35338 \u24687 \
-                          feedbackDisplay.classList.add('text-green-600'); // \uc0\u35373 \u32622 \u25991 \u23383 \u38991 \u33394 \u28858 \u32160 \u33394 \
-                          score++; // \uc0\u20998 \u25976 \u22686 \u21152 \
-                      \} else \{\
-                          btn.classList.remove('hover:bg-gray-100'); // \uc0\u31227 \u38500 \u25080 \u20572 \u25928 \u26524 \
-                          btn.classList.add('incorrect-answer'); // \uc0\u28155 \u21152 \u31572 \u37679 \u30340 \u27171 \u24335 \u21644 \u21205 \u30059 \
-                          // \uc0\u39023 \u31034 \u31572 \u37679 \u35338 \u24687 \u65292 \u20006 \u25552 \u31034 \u27491 \u30906 \u31572 \u26696 \
-                          feedbackDisplay.innerHTML = `\uc0\u31572 \u37679 \u20102 \u65281 \u55357 \u56863  \u27491 \u30906 \u31572 \u26696 \u26159 \u65306 <strong class="text-blue-700">$\{correctAnswer\}</strong>`;\
-                          feedbackDisplay.classList.add('text-red-600'); // \uc0\u35373 \u32622 \u25991 \u23383 \u38991 \u33394 \u28858 \u32005 \u33394 \
-                      \}\
-                  \} else \{\
-                       // \uc0\u23565 \u26044 \u20854 \u20182 \u26410 \u34987 \u36984 \u20013 \u19988 \u19981 \u26159 \u27491 \u30906 \u31572 \u26696 \u30340 \u25353 \u37397 \u65292 \u31245 \u24494 \u38477 \u20302 \u36879 \u26126 \u24230 \
-                       if (btn.textContent !== correctAnswer) \{\
-                          btn.classList.add('opacity-60');\
-                       \}\
-                  \}\
-             \});\
-\
-\
-            scoreDisplay.textContent = `\uc0\u20998 \u25976 : $\{score\}`; // \u26356 \u26032 \u20998 \u25976 \u39023 \u31034 \
-            nextButton.classList.remove('hidden'); // \uc0\u39023 \u31034 \u12300 \u19979 \u19968 \u38988 \u12301 \u25353 \u37397 \
-        \}\
-\
-        // \uc0\u12300 \u19979 \u19968 \u38988 \u12301 \u25353 \u37397 \u30340 \u40670 \u25802 \u20107 \u20214 \u30435 \u32893 \u22120 \
-        nextButton.addEventListener('click', () => \{\
-             currentQuestionIndex++; // \uc0\u38988 \u34399 \u21152  1\
-             displayQuestion(); // \uc0\u39023 \u31034 \u19979 \u19968 \u38988 \
-        \});\
-\
-         // \uc0\u39023 \u31034 \u21508 \u38542 \u27573 \u30340 \u20316 \u31572 \u32080 \u26524 \u25688 \u35201 \
-         function displayRoundResults(round, answers, title) \{\
-             quizArea.classList.add('hidden'); // \uc0\u38577 \u34255 \u28204 \u39511 \u21312 \u22495 \
-             resultsArea.classList.remove('hidden'); // \uc0\u39023 \u31034 \u32080 \u26524 \u21312 \u22495 \
-             restartButton.classList.add('hidden'); // \uc0\u22312 \u38542 \u27573 \u32080 \u26524 \u38913 \u38577 \u34255 \u37325 \u26032 \u38283 \u22987 \u25353 \u37397 \
-\
-             let resultsDiv;\
-             if (round === 1) \{\
-                 resultsDiv = round1ResultsDiv;\
-             \} else if (round === 2) \{\
-                 resultsDiv = round2ResultsDiv;\
-             \}\
-\
-             // \uc0\u28165 \u31354 \u21069 \u19968 \u38542 \u27573 \u30340 \u35443 \u32048 \u32080 \u26524 \u39023 \u31034  (\u22914 \u26524 \u23384 \u22312 )\
-             if (round === 2) \{\
-                 round1ResultsDiv.innerHTML = ''; // \uc0\u28165 \u31354 \u31532 \u19968 \u38542 \u27573 \u30340 \u35443 \u32048 \u32080 \u26524 \
-             \}\
-             round2ResultsDiv.innerHTML = ''; // \uc0\u28165 \u31354 \u31532 \u20108 \u38542 \u27573 \u30340 \u35443 \u32048 \u32080 \u26524 \
-             round3ResultsDiv.innerHTML = ''; // \uc0\u28165 \u31354 \u31532 \u19977 \u38542 \u27573 \u30340 \u35443 \u32048 \u32080 \u26524 \
-\
-\
-             // \uc0\u39023 \u31034 \u27161 \u38988 \u21644 \u31572 \u23565 \u38988 \u25976 \
-             resultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 text-indigo-700">$\{title\} \uc0\u25688 \u35201 : $\{answers.filter(a => a.isCorrect).length\}/$\{answers.length\} \u31572 \u23565 </h3>`;\
-\
-             // \uc0\u28155 \u21152 \u35443 \u32048 \u30340 \u20316 \u31572 \u32080 \u26524 \
-             answers.forEach((ans, index) => \{\
-                 const resultClass = ans.isCorrect ? 'text-green-600' : 'text-red-600'; // \uc0\u26681 \u25818 \u23565 \u37679 \u35373 \u32622 \u25991 \u23383 \u38991 \u33394 \
-                 const symbol = ans.isCorrect ? '\uc0\u10004 \u65039 ' : '\u10060 '; // \u26681 \u25818 \u23565 \u37679 \u35373 \u32622 \u31526 \u34399 \
-                 // \uc0\u22914 \u26524 \u31572 \u37679 \u65292 \u39023 \u31034 \u29609 \u23478 \u36984 \u25799 \u30340 \u31572 \u26696 \
-                 const userAnswerDisplay = ans.isCorrect ? '' : ` (\uc0\u24744 \u36984 \u20102 : $\{ans.userAnswer\})`;\
-                 // \uc0\u28155 \u21152 \u27599 \u38988 \u30340 \u32080 \u26524 \u21040 \u39023 \u31034 \u21312 \u22495 \
-                 resultsDiv.innerHTML += `\
-                     <div class="mb-2 p-2 border-b border-gray-200 text-left $\{ans.isCorrect ? 'bg-green-50' : 'bg-red-50'\} rounded">\
-                         <p>$\{index + 1\}. $\{ans.question\} \uc0\u10145 \u65039  $\{ans.correctAnswer\} <span class="$\{resultClass\}">$\{symbol\}$\{userAnswerDisplay\}</span></p>\
-                     </div>\
-                 `;\
-             \});\
-\
-\
-             // \uc0\u28155 \u21152 \u36914 \u20837 \u19979 \u19968 \u38542 \u27573 \u30340 \u25353 \u37397 \
-             let nextRoundButton;\
-             if (round === 1) \{\
-                 nextRoundButton = document.createElement('button');\
-                 nextRoundButton.id = 'start-round2-button';\
-                 nextRoundButton.textContent = '\uc0\u38283 \u22987 \u31532 \u20108 \u38542 \u27573 ';\
-                 nextRoundButton.classList.add('mt-4', 'bg-purple-600', 'hover:bg-purple-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'transition', 'duration-300');\
-                 nextRoundButton.addEventListener('click', startRound2);\
-                 resultsDiv.appendChild(nextRoundButton);\
-             \} else if (round === 2) \{\
-                 nextRoundButton = document.createElement('button');\
-                 nextRoundButton.id = 'start-round3-button';\
-                 nextRoundButton.textContent = '\uc0\u38283 \u22987 \u31532 \u19977 \u38542 \u27573 ';\
-                 nextRoundButton.classList.add('mt-4', 'bg-teal-600', 'hover:bg-teal-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'transition', 'duration-300');\
-                 nextRoundButton.addEventListener('click', startRound3);\
-                 resultsDiv.appendChild(nextRoundButton);\
-             \}\
-\
-\
-             finalScoreDisplay.textContent = `\uc0\u30446 \u21069 \u20998 \u25976 : $\{score\}`; // \u39023 \u31034 \u38542 \u27573 \u32080 \u26463 \u26178 \u30340 \u20998 \u25976 \
-\
-         \}\
-\
-         // \uc0\u38283 \u22987 \u31532 \u20108 \u38542 \u27573 \u30340 \u20989 \u24335 \
-         function startRound2() \{\
-             currentRound = 2; // \uc0\u23559 \u38542 \u27573 \u35373 \u28858  2\
-             currentQuestionIndex = 0; // \uc0\u37325 \u35373 \u38988 \u34399 \u28858  0\
-              progressBar.style.width = `0%`; // \uc0\u37325 \u35373 \u36914 \u24230 \u26781 \
-             resultsArea.classList.add('hidden'); // \uc0\u38577 \u34255 \u32080 \u26524 \u21312 \u22495 \
-             quizArea.classList.remove('hidden'); // \uc0\u37325 \u26032 \u39023 \u31034 \u28204 \u39511 \u21312 \u22495 \
-             displayQuestion(); // \uc0\u38283 \u22987 \u39023 \u31034 \u31532 \u20108 \u38542 \u27573 \u30340 \u31532 \u19968 \u38988 \
-         \}\
-\
-        // \uc0\u38283 \u22987 \u31532 \u19977 \u38542 \u27573 \u30340 \u20989 \u24335 \
-         function startRound3() \{\
-             currentRound = 3; // \uc0\u23559 \u38542 \u27573 \u35373 \u28858  3\
-             currentQuestionIndex = 0; // \uc0\u37325 \u35373 \u38988 \u34399 \u28858  0\
-              progressBar.style.width = `0%`; // \uc0\u37325 \u35373 \u36914 \u24230 \u26781 \
-             resultsArea.classList.add('hidden'); // \uc0\u38577 \u34255 \u32080 \u26524 \u21312 \u22495 \
-             quizArea.classList.remove('hidden'); // \uc0\u37325 \u26032 \u39023 \u31034 \u28204 \u39511 \u21312 \u22495 \
-             displayQuestion(); // \uc0\u38283 \u22987 \u39023 \u31034 \u31532 \u19977 \u38542 \u27573 \u30340 \u31532 \u19968 \u38988 \
-         \}\
-\
-\
-         // \uc0\u39023 \u31034 \u26368 \u32066 \u30340 \u28204 \u39511 \u32080 \u26524 \
-         function displayFinalResults() \{\
-             quizArea.classList.add('hidden'); // \uc0\u38577 \u34255 \u28204 \u39511 \u21312 \u22495 \
-             resultsArea.classList.remove('hidden'); // \uc0\u39023 \u31034 \u32080 \u26524 \u21312 \u22495 \
-             restartButton.classList.remove('hidden'); // \uc0\u39023 \u31034 \u37325 \u26032 \u38283 \u22987 \u25353 \u37397 \
-\
-             // \uc0\u28165 \u31354 \u25152 \u26377 \u38542 \u27573 \u30340 \u35443 \u32048 \u32080 \u26524 \u39023 \u31034 \
-             round1ResultsDiv.innerHTML = '';\
-             round2ResultsDiv.innerHTML = '';\
-             round3ResultsDiv.innerHTML = '';\
-\
-              // \uc0\u39023 \u31034 \u31532 \u19968 \u38542 \u27573 \u30340 \u25688 \u35201  (\u21482 \u39023 \u31034 \u31572 \u23565 \u38988 \u25976 )\
-              round1ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 text-indigo-700">\uc0\u31532 \u19968 \u38542 \u27573 \u25688 \u35201 : $\{round1Answers.filter(a => a.isCorrect).length\}/$\{round1Answers.length\} \u31572 \u23565 </h3>`;\
-\
-              // \uc0\u39023 \u31034 \u31532 \u20108 \u38542 \u27573 \u30340 \u25688 \u35201  (\u21482 \u39023 \u31034 \u31572 \u23565 \u38988 \u25976 )\
-              round2ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 mt-4 text-teal-700">\uc0\u31532 \u20108 \u38542 \u27573 \u25688 \u35201 : $\{round2Answers.filter(a => a.isCorrect).length\}/$\{round2Answers.length\} \u31572 \u23565 </h3>`;\
-\
-             // \uc0\u39023 \u31034 \u31532 \u19977 \u38542 \u27573 \u30340 \u35443 \u32048 \u20316 \u31572 \u32080 \u26524 \
-             round3ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 mt-4 text-teal-700">\uc0\u31532 \u19977 \u38542 \u27573 \u20316 \u31572 \u32080 \u26524  ($\{round3Answers.filter(a => a.isCorrect).length\}/$\{round3Answers.length\})</h3>`;\
-             round3Answers.forEach((ans, index) => \{\
-                  const resultClass = ans.isCorrect ? 'text-green-600' : 'text-red-600';\
-                  const symbol = ans.isCorrect ? '\uc0\u10004 \u65039 ' : '\u10060 ';\
-                  const userAnswerDisplay = ans.isCorrect ? '' : ` (\uc0\u24744 \u36984 \u20102 : $\{ans.userAnswer\})`;\
-                   round3ResultsDiv.innerHTML += `\
-                       <div class="mb-2 p-2 border-b border-gray-200 text-left $\{ans.isCorrect ? 'bg-green-50' : 'bg-red-50'\} rounded">\
-                           <p>$\{index + 1\}. $\{ans.question\} \uc0\u10145 \u65039  $\{ans.correctAnswer\} <span class="$\{resultClass\}">$\{symbol\}$\{userAnswerDisplay\}</span></p>\
-                       </div>\
-                   `;\
-             \});\
-\
-             // \uc0\u39023 \u31034 \u26368 \u32066 \u32317 \u20998 \
-             document.getElementById('final-score').textContent = `\uc0\u32317 \u20998 : $\{score\} / $\{words.length * 3\}`; // \u32317 \u20998 \u26159 \u19977 \u38542 \u27573 \u38988 \u30446 \u25976 \u32317 \u21644 \
-         \}\
-\
-        // \uc0\u12300 \u37325 \u26032 \u38283 \u22987 \u12301 \u25353 \u37397 \u30340 \u40670 \u25802 \u20107 \u20214 \u30435 \u32893 \u22120 \
-        restartButton.addEventListener('click', startQuiz);\
-\
-        // \uc0\u21021 \u22987 \u21270 \u20006 \u38283 \u22987 \u28204 \u39511 \u30340 \u20989 \u24335 \
-        function startQuiz() \{\
-             // \uc0\u37325 \u35373 \u25152 \u26377 \u36938 \u25138 \u29376 \u24907 \u35722 \u25976 \
-             currentRound = 1;\
-             currentQuestionIndex = 0;\
-             score = 0;\
-             round1Answers = [];\
-             round2Answers = [];\
-             round3Answers = [];\
-             optionsDisabled = false;\
-\
-             // \uc0\u28310 \u20633 \u31532 \u19968 \u38542 \u27573 \u38988 \u30446  (\u21488 \u35486 ->\u33521 )\
-             let tempWordsRound1 = shuffleArray([...words]); // \uc0\u35079 \u35069 \u20006 \u25171 \u20098 \u35422 \u24409 \u38499 \u21015 \
-             questionsRound1 = tempWordsRound1.map(word => (\{\
-                 question: word.hanzi, // \uc0\u21839 \u38988 \u26159 \u21488 \u35486 \u28450 \u23383 \
-                 correctAnswer: word.english // \uc0\u27491 \u30906 \u31572 \u26696 \u26159 \u33521 \u25991 \
-             \}));\
-\
-             // \uc0\u28310 \u20633 \u31532 \u20108 \u38542 \u27573 \u38988 \u30446  (\u33521 ->\u21488 \u35486 )\
-             let tempWordsRound2 = shuffleArray([...words]); // \uc0\u20877 \u27425 \u35079 \u35069 \u20006 \u25171 \u20098 \
-              questionsRound2 = tempWordsRound2.map(word => (\{\
-                  question: word.english, // \uc0\u21839 \u38988 \u26159 \u33521 \u25991 \
-                  correctAnswer: word.hanzi // \uc0\u27491 \u30906 \u31572 \u26696 \u26159 \u21488 \u35486 \u28450 \u23383 \
-              \}));\
-\
-             // \uc0\u28310 \u20633 \u31532 \u19977 \u38542 \u27573 \u38988 \u30446  (\u21488 \u35486 ->\u25340 \u38899 )\
-             let tempWordsRound3 = shuffleArray([...words]); // \uc0\u20877 \u27425 \u35079 \u35069 \u20006 \u25171 \u20098 \
-             questionsRound3 = tempWordsRound3.map(word => (\{\
-                 question: word.hanzi, // \uc0\u21839 \u38988 \u26159 \u21488 \u35486 \u28450 \u23383 \
-                 correctAnswer: word.pinyin // \uc0\u27491 \u30906 \u31572 \u26696 \u26159 \u21488 \u32645 \u25340 \u38899 \
-             \}));\
-\
-\
-             // \uc0\u37325 \u35373  UI \u20171 \u38754 \
-             scoreDisplay.textContent = `\uc0\u20998 \u25976 : 0`;\
-              progressBar.style.width = '0%';\
-             resultsArea.classList.add('hidden'); // \uc0\u38577 \u34255 \u32080 \u26524 \u21312 \u22495 \
-              round1ResultsDiv.innerHTML = ''; // \uc0\u28165 \u31354 \u32080 \u26524 \u39023 \u31034 \
-              round2ResultsDiv.innerHTML = '';\
-              round3ResultsDiv.innerHTML = '';\
-              finalScoreDisplay.textContent = ''; // \uc0\u28165 \u31354 \u26368 \u32066 \u20998 \u25976 \u39023 \u31034 \
-             quizArea.classList.remove('hidden'); // \uc0\u39023 \u31034 \u28204 \u39511 \u21312 \u22495 \
-\
-             // \uc0\u38283 \u22987 \u39023 \u31034 \u31532 \u19968 \u38988 \
-             displayQuestion();\
-        \}\
-\
-        // \uc0\u38913 \u38754 \u36617 \u20837 \u23436 \u25104 \u24460 \u65292 \u33258 \u21205 \u38283 \u22987 \u28204 \u39511 \
-        startQuiz();\
-    </script>\
-</body>\
-</html>\
-}
+        /* 答對時的脈衝動畫 */
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* 答錯時的搖晃動畫 */
+         @keyframes incorrectShake {
+             0%, 100% { transform: translateX(0); }
+             25% { transform: translateX(-5px); }
+             75% { transform: translateX(5px); }
+         }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center p-4 font-sans">
+    <div id="quiz-container" class="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-3xl">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2">看影片學雙語（台語，英文）</h1>
+        <p class="text-base font-bold text-center text-gray-700 mb-1">遊戲創建人：Gloria吳秀蘭老師</p>
+        <p class="text-sm text-center text-gray-600 mb-1">Google認證講師，台語認證高級證書英語間台語教師</p>
+        <p class="text-sm text-center text-blue-600 hover:underline mb-4">
+            參考影片：<a href="https://youtu.be/PrF6aT8mi_c?si=SUJtXRbfiitB2kU1”此訊息中的網址，改為“參考影片：請按連結（加上超連結效果）" target="_blank" rel="noopener noreferrer">請按連結</a>
+        </p>
+
+        <div id="quiz-area">
+            <div id="progress-bar" class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                <div id="progress" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+            <p id="round-info" class="text-center font-semibold text-lg text-indigo-700 mb-4"></p>
+            <p id="score" class="text-center font-semibold text-lg text-green-700 mb-4">分數: 0</p>
+
+            <div id="question-card" class="bg-indigo-100 border border-indigo-300 rounded-lg p-4 md:p-6 mb-6 text-center">
+                <p class="text-gray-600 mb-2 text-sm hidden" id="question-type"></p>
+                <p id="question" class="text-xl md:text-2xl font-semibold text-indigo-900"></p>
+            </div>
+
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+
+            <div id="feedback" class="mt-4 text-center font-medium h-6"></div>
+            <button id="next-button" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 hidden">下一題</button>
+        </div>
+
+        <div id="results-area" class="hidden text-center">
+             <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">測驗結果</h2>
+             <div id="round1-results" class="mb-4"></div>
+             <div id="round2-results" class="mb-4"></div>
+             <div id="round3-results" class="mb-4"></div>
+             <p id="final-score" class="text-lg font-semibold mt-4"></p>
+             <button id="restart-button" class="mt-6 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">重新開始</button>
+        </div>
+    </div>
+
+    <script>
+        // 資料來源：台語漢字、拼音、英文翻譯
+        const words = [
+            { hanzi: "保險業務員", pinyin: "Pó-hiám gia̍p-bū-uân", english: "Insurance agent" },
+            { hanzi: "醫療意外險", pinyin: "I-liâu ì-guā-hiám", english: "Medical accident insurance" },
+            { hanzi: "車禍", pinyin: "Chhia-hō", english: "Car accident" },
+            { hanzi: "住院", pinyin: "Tsū-īnn", english: "Hospitalization" },
+            { hanzi: "補助", pinyin: "Hú-tsōo", english: "Subsidy" },
+            { hanzi: "朋友", pinyin: "Pîng-iú", english: "Friend" },
+            { hanzi: "親戚", pinyin: "Tshin-tsheh", english: "Relatives" },
+            { hanzi: "手指頭", pinyin: "Tshiú-tsí-thâu", english: "Finger" },
+            { hanzi: "家庭", pinyin: "Ka-tîng", english: "Family" },
+            { hanzi: "生活", pinyin: "Sing-ua̍h", english: "Life" }
+        ];
+
+        // 遊戲狀態變數
+        let currentRound = 1; // 目前階段 (1: 台語->英, 2: 英->台語, 3: 台語->拼音)
+        let currentQuestionIndex = 0; // 目前題號 (從 0 開始)
+        let score = 0; // 分數
+        let questionsRound1 = []; // 第一階段題目 (台語->英)
+        let questionsRound2 = []; // 第二階段題目 (英->台語)
+        let questionsRound3 = []; // 第三階段題目 (台語->拼音)
+        let round1Answers = []; // 儲存第一階段的作答記錄 { question, correctAnswer, userAnswer, isCorrect }
+        let round2Answers = []; // 儲存第二階段的作答記錄
+        let round3Answers = []; // 儲存第三階段的作答記錄
+        let optionsDisabled = false; // 控制選項是否可點擊 (防止重複點擊)
+
+        // 獲取 DOM 元素
+        const quizArea = document.getElementById('quiz-area');
+        const resultsArea = document.getElementById('results-area');
+        const roundInfo = document.getElementById('round-info');
+        const scoreDisplay = document.getElementById('score');
+        // const questionTypeDisplay = document.getElementById('question-type'); // 雖然隱藏了，但 JS 可能仍需引用
+        const questionDisplay = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackDisplay = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-button');
+        const restartButton = document.getElementById('restart-button');
+        const progressBar = document.getElementById('progress');
+        const round1ResultsDiv = document.getElementById('round1-results'); // 獲取結果顯示區域的元素
+        const round2ResultsDiv = document.getElementById('round2-results');
+        const round3ResultsDiv = document.getElementById('round3-results');
+        const finalScoreDisplay = document.getElementById('final-score');
+
+
+        // Fisher-Yates (aka Knuth) Shuffle 洗牌演算法：用於打亂陣列順序
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1)); // 隨機選一個前面的元素
+                [array[i], array[j]] = [array[j], array[i]]; // 交換元素
+            }
+            return array;
+        }
+
+         // 產生包含一個正確答案和三個干擾項的選項陣列
+         function generateOptions(correctAnswer, type) {
+             let options = [correctAnswer]; // 先放入正確答案
+             let distractors = [];
+
+             // 根據類型 (english, hanzi, pinyin) 取得所有可能的選項，並排除正確答案
+             if (type === 'english') {
+                 distractors = words.map(w => w.english).filter(item => item !== correctAnswer);
+             } else if (type === 'hanzi') {
+                 distractors = words.map(w => w.hanzi).filter(item => item !== correctAnswer);
+             } else if (type === 'pinyin') {
+                 distractors = words.map(w => w.pinyin).filter(item => item !== correctAnswer);
+             }
+
+             shuffleArray(distractors); // 打亂干擾項順序
+
+             // 從打亂的干擾項中取出，直到選項達到 4 個
+             while (options.length < 4 && distractors.length > 0) {
+                 const distractor = distractors.pop();
+                 if (!options.includes(distractor)) { // 避免重複選項
+                     options.push(distractor);
+                 }
+             }
+             // 如果干擾項不足（例如總詞彙量很少），則隨機選取詞彙補充，確保總有 4 個選項
+             while (options.length < 4) {
+                 const randomWord = words[Math.floor(Math.random() * words.length)];
+                 let potentialOption;
+                 if (type === 'english') {
+                     potentialOption = randomWord.english;
+                 } else if (type === 'hanzi') {
+                     potentialOption = randomWord.hanzi;
+                 } else if (type === 'pinyin') {
+                     potentialOption = randomWord.pinyin;
+                 }
+
+                 if (!options.includes(potentialOption)) {
+                     options.push(potentialOption);
+                 }
+             }
+
+             return shuffleArray(options); // 最後再打亂一次包含正確答案的選項陣列
+         }
+
+        // 顯示目前的問題和選項
+        function displayQuestion() {
+            optionsDisabled = false; // 重設選項為可點擊
+            feedbackDisplay.textContent = ''; // 清空上一題的回饋
+            feedbackDisplay.className = 'mt-4 text-center font-medium h-6'; // 重設回饋樣式
+            optionsContainer.innerHTML = ''; // 清空上一題的選項按鈕
+            nextButton.classList.add('hidden'); // 隱藏下一題按鈕
+
+            // 根據目前階段選擇題目來源和問題類型
+            let currentQuestions;
+            let answerType;
+            let roundTitle;
+
+            if (currentRound === 1) {
+                currentQuestions = questionsRound1;
+                answerType = 'english';
+                roundTitle = '第一階段：台語漢字 ➡️ 英文';
+            } else if (currentRound === 2) {
+                currentQuestions = questionsRound2;
+                answerType = 'hanzi';
+                roundTitle = '第二階段：英文 ➡️ 台語漢字';
+            } else if (currentRound === 3) {
+                currentQuestions = questionsRound3;
+                answerType = 'pinyin';
+                roundTitle = '第三階段：台語漢字 ➡️ 台羅拼音';
+            }
+
+
+            // 檢查是否完成該階段所有題目
+            if (currentQuestionIndex >= currentQuestions.length) {
+                if (currentRound < 3) {
+                    // 如果不是最後一階段，顯示該階段結果並準備下一階段
+                    if (currentRound === 1) {
+                        displayRoundResults(1, round1Answers, roundTitle);
+                    } else if (currentRound === 2) {
+                        displayRoundResults(2, round2Answers, roundTitle);
+                    }
+                } else {
+                    // 如果是最後一階段，顯示最終結果
+                     displayFinalResults();
+                }
+                return; // 結束函式執行
+            }
+
+            // 獲取當前問題的資料
+            const questionData = currentQuestions[currentQuestionIndex];
+            // 更新介面顯示：階段、題號、問題本身
+            roundInfo.textContent = `${roundTitle} - 題目 ${currentQuestionIndex + 1} / ${currentQuestions.length}`;
+            questionDisplay.textContent = questionData.question;
+
+            // 產生選項 (包含正確答案和干擾項)
+            const options = generateOptions(questionData.correctAnswer, answerType);
+
+            // 創建選項按鈕並添加到容器中
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                // 添加 Tailwind CSS 樣式和自訂 'card' 樣式
+                button.classList.add('card', 'bg-white', 'border', 'border-gray-300', 'rounded-lg', 'p-4', 'text-center', 'hover:bg-gray-100', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500', 'focus:ring-opacity-50', 'transition', 'duration-150', 'ease-in-out');
+                // 設定按鈕點擊事件
+                button.onclick = () => selectAnswer(option, questionData.correctAnswer, button);
+                optionsContainer.appendChild(button);
+            });
+
+            // 更新進度條
+            const totalQuestions = questionsRound1.length + questionsRound2.length + questionsRound3.length;
+            let completedQuestions = 0;
+            if (currentRound === 1) {
+                completedQuestions = currentQuestionIndex;
+            } else if (currentRound === 2) {
+                completedQuestions = questionsRound1.length + currentQuestionIndex;
+            } else if (currentRound === 3) {
+                 completedQuestions = questionsRound1.length + questionsRound2.length + currentQuestionIndex;
+            }
+            // 計算進度百分比 (顯示已完成的題目比例)
+            const progressPercentage = (completedQuestions / totalQuestions) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        // 處理玩家選擇答案的邏輯
+        function selectAnswer(selectedOption, correctAnswer, button) {
+             if (optionsDisabled) return; // 如果選項已被禁用 (已作答)，則不執行任何操作
+             optionsDisabled = true; // 禁用選項，防止重複點擊
+
+            const isCorrect = selectedOption === correctAnswer; // 判斷答案是否正確
+             // 記錄作答資訊
+             const answerRecord = {
+                 question: (currentRound === 1 ? questionsRound1 : (currentRound === 2 ? questionsRound2 : questionsRound3))[currentQuestionIndex].question,
+                 correctAnswer: correctAnswer,
+                 userAnswer: selectedOption,
+                 isCorrect: isCorrect
+             };
+
+             // 將作答記錄存儲到對應階段的陣列中
+             if (currentRound === 1) {
+                 round1Answers.push(answerRecord);
+             } else if (currentRound === 2) {
+                 round2Answers.push(answerRecord);
+             } else if (currentRound === 3) {
+                 round3Answers.push(answerRecord);
+             }
+
+
+             // 禁用所有選項按鈕，並提供視覺回饋
+             const buttons = optionsContainer.querySelectorAll('button');
+             buttons.forEach(btn => {
+                 btn.disabled = true; // 禁用按鈕
+                  // 無論對錯，都高亮顯示正確答案
+                  if (btn.textContent === correctAnswer) {
+                      btn.classList.add('highlight-correct'); // 添加高亮樣式
+                  }
+                  // 根據選擇的按鈕和答案是否正確，應用不同的樣式和動畫
+                  if (btn === button) { // 如果是玩家點擊的那個按鈕
+                      if (isCorrect) {
+                          btn.classList.remove('hover:bg-gray-100'); // 移除懸停效果
+                          btn.classList.add('correct-answer'); // 添加答對的樣式和動畫
+                          feedbackDisplay.textContent = '答對了！ 🎉'; // 顯示答對訊息
+                          feedbackDisplay.classList.add('text-green-600'); // 設置文字顏色為綠色
+                          score++; // 分數增加
+                      } else {
+                          btn.classList.remove('hover:bg-gray-100'); // 移除懸停效果
+                          btn.classList.add('incorrect-answer'); // 添加答錯的樣式和動畫
+                          // 顯示答錯訊息，並提示正確答案
+                          feedbackDisplay.innerHTML = `答錯了！😟 正確答案是：<strong class="text-blue-700">${correctAnswer}</strong>`;
+                          feedbackDisplay.classList.add('text-red-600'); // 設置文字顏色為紅色
+                      }
+                  } else {
+                       // 對於其他未被選中且不是正確答案的按鈕，稍微降低透明度
+                       if (btn.textContent !== correctAnswer) {
+                          btn.classList.add('opacity-60');
+                       }
+                  }
+             });
+
+
+            scoreDisplay.textContent = `分數: ${score}`; // 更新分數顯示
+            nextButton.classList.remove('hidden'); // 顯示「下一題」按鈕
+        }
+
+        // 「下一題」按鈕的點擊事件監聽器
+        nextButton.addEventListener('click', () => {
+             currentQuestionIndex++; // 題號加 1
+             displayQuestion(); // 顯示下一題
+        });
+
+         // 顯示各階段的作答結果摘要
+         function displayRoundResults(round, answers, title) {
+             quizArea.classList.add('hidden'); // 隱藏測驗區域
+             resultsArea.classList.remove('hidden'); // 顯示結果區域
+             restartButton.classList.add('hidden'); // 在階段結果頁隱藏重新開始按鈕
+
+             let resultsDiv;
+             if (round === 1) {
+                 resultsDiv = round1ResultsDiv;
+             } else if (round === 2) {
+                 resultsDiv = round2ResultsDiv;
+             }
+
+             // 清空前一階段的詳細結果顯示 (如果存在)
+             if (round === 2) {
+                 round1ResultsDiv.innerHTML = ''; // 清空第一階段的詳細結果
+             }
+             round2ResultsDiv.innerHTML = ''; // 清空第二階段的詳細結果
+             round3ResultsDiv.innerHTML = ''; // 清空第三階段的詳細結果
+
+
+             // 顯示標題和答對題數
+             resultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 text-indigo-700">${title} 摘要: ${answers.filter(a => a.isCorrect).length}/${answers.length} 答對</h3>`;
+
+             // 添加詳細的作答結果
+             answers.forEach((ans, index) => {
+                 const resultClass = ans.isCorrect ? 'text-green-600' : 'text-red-600'; // 根據對錯設置文字顏色
+                 const symbol = ans.isCorrect ? '✔️' : '❌'; // 根據對錯設置符號
+                 // 如果答錯，顯示玩家選擇的答案
+                 const userAnswerDisplay = ans.isCorrect ? '' : ` (您選了: ${ans.userAnswer})`;
+                 // 添加每題的結果到顯示區域
+                 resultsDiv.innerHTML += `
+                     <div class="mb-2 p-2 border-b border-gray-200 text-left ${ans.isCorrect ? 'bg-green-50' : 'bg-red-50'} rounded">
+                         <p>${index + 1}. ${ans.question} ➡️ ${ans.correctAnswer} <span class="${resultClass}">${symbol}${userAnswerDisplay}</span></p>
+                     </div>
+                 `;
+             });
+
+
+             // 添加進入下一階段的按鈕
+             let nextRoundButton;
+             if (round === 1) {
+                 nextRoundButton = document.createElement('button');
+                 nextRoundButton.id = 'start-round2-button';
+                 nextRoundButton.textContent = '開始第二階段';
+                 nextRoundButton.classList.add('mt-4', 'bg-purple-600', 'hover:bg-purple-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'transition', 'duration-300');
+                 nextRoundButton.addEventListener('click', startRound2);
+                 resultsDiv.appendChild(nextRoundButton);
+             } else if (round === 2) {
+                 nextRoundButton = document.createElement('button');
+                 nextRoundButton.id = 'start-round3-button';
+                 nextRoundButton.textContent = '開始第三階段';
+                 nextRoundButton.classList.add('mt-4', 'bg-teal-600', 'hover:bg-teal-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'transition', 'duration-300');
+                 nextRoundButton.addEventListener('click', startRound3);
+                 resultsDiv.appendChild(nextRoundButton);
+             }
+
+
+             finalScoreDisplay.textContent = `目前分數: ${score}`; // 顯示階段結束時的分數
+
+         }
+
+         // 開始第二階段的函式
+         function startRound2() {
+             currentRound = 2; // 將階段設為 2
+             currentQuestionIndex = 0; // 重設題號為 0
+              progressBar.style.width = `0%`; // 重設進度條
+             resultsArea.classList.add('hidden'); // 隱藏結果區域
+             quizArea.classList.remove('hidden'); // 重新顯示測驗區域
+             displayQuestion(); // 開始顯示第二階段的第一題
+         }
+
+        // 開始第三階段的函式
+         function startRound3() {
+             currentRound = 3; // 將階段設為 3
+             currentQuestionIndex = 0; // 重設題號為 0
+              progressBar.style.width = `0%`; // 重設進度條
+             resultsArea.classList.add('hidden'); // 隱藏結果區域
+             quizArea.classList.remove('hidden'); // 重新顯示測驗區域
+             displayQuestion(); // 開始顯示第三階段的第一題
+         }
+
+
+         // 顯示最終的測驗結果
+         function displayFinalResults() {
+             quizArea.classList.add('hidden'); // 隱藏測驗區域
+             resultsArea.classList.remove('hidden'); // 顯示結果區域
+             restartButton.classList.remove('hidden'); // 顯示重新開始按鈕
+
+             // 清空所有階段的詳細結果顯示
+             round1ResultsDiv.innerHTML = '';
+             round2ResultsDiv.innerHTML = '';
+             round3ResultsDiv.innerHTML = '';
+
+              // 顯示第一階段的摘要 (只顯示答對題數)
+              round1ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 text-indigo-700">第一階段摘要: ${round1Answers.filter(a => a.isCorrect).length}/${round1Answers.length} 答對</h3>`;
+
+              // 顯示第二階段的摘要 (只顯示答對題數)
+              round2ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 mt-4 text-teal-700">第二階段摘要: ${round2Answers.filter(a => a.isCorrect).length}/${round2Answers.length} 答對</h3>`;
+
+             // 顯示第三階段的詳細作答結果
+             round3ResultsDiv.innerHTML = `<h3 class="text-lg font-semibold mb-3 mt-4 text-teal-700">第三階段作答結果 (${round3Answers.filter(a => a.isCorrect).length}/${round3Answers.length})</h3>`;
+             round3Answers.forEach((ans, index) => {
+                  const resultClass = ans.isCorrect ? 'text-green-600' : 'text-red-600';
+                  const symbol = ans.isCorrect ? '✔️' : '❌';
+                  const userAnswerDisplay = ans.isCorrect ? '' : ` (您選了: ${ans.userAnswer})`;
+                   round3ResultsDiv.innerHTML += `
+                       <div class="mb-2 p-2 border-b border-gray-200 text-left ${ans.isCorrect ? 'bg-green-50' : 'bg-red-50'} rounded">
+                           <p>${index + 1}. ${ans.question} ➡️ ${ans.correctAnswer} <span class="${resultClass}">${symbol}${userAnswerDisplay}</span></p>
+                       </div>
+                   `;
+             });
+
+             // 顯示最終總分
+             document.getElementById('final-score').textContent = `總分: ${score} / ${words.length * 3}`; // 總分是三階段題目數總和
+         }
+
+        // 「重新開始」按鈕的點擊事件監聽器
+        restartButton.addEventListener('click', startQuiz);
+
+        // 初始化並開始測驗的函式
+        function startQuiz() {
+             // 重設所有遊戲狀態變數
+             currentRound = 1;
+             currentQuestionIndex = 0;
+             score = 0;
+             round1Answers = [];
+             round2Answers = [];
+             round3Answers = [];
+             optionsDisabled = false;
+
+             // 準備第一階段題目 (台語->英)
+             let tempWordsRound1 = shuffleArray([...words]); // 複製並打亂詞彙陣列
+             questionsRound1 = tempWordsRound1.map(word => ({
+                 question: word.hanzi, // 問題是台語漢字
+                 correctAnswer: word.english // 正確答案是英文
+             }));
+
+             // 準備第二階段題目 (英->台語)
+             let tempWordsRound2 = shuffleArray([...words]); // 再次複製並打亂
+              questionsRound2 = tempWordsRound2.map(word => ({
+                  question: word.english, // 問題是英文
+                  correctAnswer: word.hanzi // 正確答案是台語漢字
+              }));
+
+             // 準備第三階段題目 (台語->拼音)
+             let tempWordsRound3 = shuffleArray([...words]); // 再次複製並打亂
+             questionsRound3 = tempWordsRound3.map(word => ({
+                 question: word.hanzi, // 問題是台語漢字
+                 correctAnswer: word.pinyin // 正確答案是台羅拼音
+             }));
+
+
+             // 重設 UI 介面
+             scoreDisplay.textContent = `分數: 0`;
+              progressBar.style.width = '0%';
+             resultsArea.classList.add('hidden'); // 隱藏結果區域
+              round1ResultsDiv.innerHTML = ''; // 清空結果顯示
+              round2ResultsDiv.innerHTML = '';
+              round3ResultsDiv.innerHTML = '';
+              finalScoreDisplay.textContent = ''; // 清空最終分數顯示
+             quizArea.classList.remove('hidden'); // 顯示測驗區域
+
+             // 開始顯示第一題
+             displayQuestion();
+        }
+
+        // 頁面載入完成後，自動開始測驗
+        startQuiz();
+    </script>
+</body>
+</html>
